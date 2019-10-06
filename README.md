@@ -58,7 +58,7 @@ info: initialization is finished
 维护 README.md(分享简介) 以及 SUMMARY.md(目录结构信息)，先维护目录信息，然后执行 `gitbook init` 即可自动生成对应文件
 
 ```shell
-λ gitbook.cmd init              
+$ gitbook.cmd init
 info: create Git基础/README.md    
 info: create Git基础/Git对象概念整理.md 
 info: create Git基础/基础操作.md      
@@ -68,10 +68,21 @@ info: create SUMMARY.md
 info: initialization is finished
 ```
 
+#### 准备大纲，确定讲解内容
+
 生成文件后，首先将大纲发给参与者共同讨论增加/删除，确认分享内容后主讲人为每个大标题补上简介及参考链接
+
+#### 大纲结构
 
 目录大纲的内容分为前言、介绍章节、扩展三个部分，前言仅做分享内容概要、分享人等记录，介绍章节为具体分享内容，扩展是平时工作中用得少，但是看完可以加深了解的知识，比如：实现原理、面试题、冷门用法等
 
+#### 补全文档
+
+根据参考链接，补全demo以及概念知识点，全部完成后开始讨论
+
+#### 讨论结束
+
+讨论结束后，主讲人根据讨论，维护文档即可，主讲人按顺序轮替
 
 #### 分享内容模板
 
