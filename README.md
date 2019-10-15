@@ -68,6 +68,31 @@ info: create SUMMARY.md
 info: initialization is finished
 ```
 
+执行 `gitbook serve` 即可预览运行文档
+
+```shell
+$ gitbook.cmd serve                                
+Live reload server started on port: 35729          
+Press CTRL+C to quit ...                           
+                                                   
+info: 7 plugins are installed                      
+info: loading plugin "livereload"... OK            
+info: loading plugin "highlight"... OK             
+info: loading plugin "search"... OK                
+info: loading plugin "lunr"... OK                  
+info: loading plugin "sharing"... OK               
+info: loading plugin "fontsettings"... OK          
+info: loading plugin "theme-default"... OK         
+info: found 21 pages                               
+info: found 22 asset files                         
+info: >> generation finished with success in 2.6s !
+                                                   
+Starting server ...                                
+Serving book on http://localhost:4000              
+```
+
+执行 `gitbook build` 可编译文档
+
 #### 准备大纲，确定讲解内容
 
 生成文件后，首先将大纲发给参与者共同讨论增加/删除，确认分享内容后主讲人为每个大标题补上简介及参考链接
