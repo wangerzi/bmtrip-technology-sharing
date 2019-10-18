@@ -29,7 +29,11 @@ Linux 下有一个命令 `diff` 可用于查找两个文件中的差异，命令
 > 中年做产品，
 > 老年做和尚。
 
-`a.txt` 和 `b.txt` 有差异，使用 
+`a.txt` 和 `b.txt` 有差异，使用 `diff -u a.txt b.txt` 可查看差异
+
+## 什么是底层命令，什么是高层命令？
+
+底层命令(plumbing)和高层命令(procelain)，底层命令主要是为工具和自定义脚本服务的，高层命令更为友好方便，是底层命令的封装。
 
 ## Git的文件结构是什么？.git 里边到底存放了什么？
 
@@ -46,13 +50,24 @@ Initialized empty Git repository in D:/git/gitTest/.git/
 
 #### 文件结构
 
+```shell
+HEAD
+config
+description
+hooks/
+index
+info/
+objects/
+refs/
+```
+
 ##### hooks 文件夹
 
 GIT HOOK，用于在个GIT的各个过程节点执行脚本，比如提交前/推送前/更新前等节点，均可以自定义执行脚本，可以做到提交前本地自动检查代码，进行单元测试、推送后自动通知服务器更新代码等功能。
 
 ##### info 文件夹
 
-包含一些配置信息，比如 `except` 可以用于存一些跳过跟踪的文件配置
+包含一些配置信息，比如 `except` 可以用于存一些跳过跟踪的文件配置，并且这里的配置不在 `.gitignore` 中管理
 
 ```shell
 $ cat .git\info\exclude
@@ -66,11 +81,11 @@ $ cat .git\info\exclude
 
 ##### objects 文件夹
 
-存储了所有的数据，相当于一个小的文件系统
+存储了所有的数据，相当于一个小的文件系统，hash 值的前两位作为子文件夹名称，后38位作为文件名。
 
 ##### ref 文件夹
 
-保存引用信息，即分支信息
+保存引用信息，比如本地/远程分支信息、stash信息、标签信息，比如本地 master 分支就会被保存为 `.git/refs/head/master`，远程 master 分支会被保存为 `.git/refs/origin/master`
 
 ##### HEAD 文件
 
@@ -87,7 +102,11 @@ ref: refs/heads/master
 
 ##### config 文件
 
+项目特有的配置文件信息
+
 ##### description 文件
+
+仅供 GitWeb 程序使用，看文件内容是用来写Git包名字的
 
 ## Git是如何存文件的？Hash-Object 介绍
 
@@ -95,73 +114,75 @@ ref: refs/heads/master
 
 Git数据库文件位于 `.git/objetcts/`，Key 的前两位作为文件夹名称，后38位作为文件名，存储内容即为文件内容。
 
-### 举个栗子
+### 底层命令：
 
-#### Git初始化
+#### hash-object
 
-`git init` ，初始化Git仓库，很基础就不必介绍了
+作用：用于将文件存放于 Git 数据库中，并返回索引
 
-```shell
-$ git init gitTest
-Initialized empty Git repository in D:/git/gitTest/.git/
-```
-
-#### Git数据库写入
-
-数据库写入有一条底层命令：`git hash-object -w '这里是内容XXXXXX'`
+使用：
 
 ```shell
-
+echo "Hello World" > temp
+git hash-object -w temp
 ```
 
-#### Git数据库的查询操作
-
-
-
-
-
-概念介绍之后，可以结合实际写一些demo
-
-### 第一步 XXX
-
-首先进行，xxxxxx
+也可以简化一下，用管道 + 标准输入的方式
 
 ```shell
-echo "示例代码"
+echo "Hello World" | git hash-object -w stdin
 ```
 
-### 第二步 XXX
-
-然后进行，xxxxxx
+重复的文件只会记录一次，比如：
 
 ```shell
-echo "示例代码"
+$ echo "Hello" | git hash-object -w --stdin
+010b3da57a0903855537d02ddcc4d63396515190
+
+$ echo "Hello" | git hash-object -w --stdin
+010b3da57a0903855537d02ddcc4d63396515190
 ```
 
-### 第三步 XXX
+### cat-file
 
-然后进行，xxxxxx
+作用：用于通过索引查找文件，PS：HASH的值至少写四位
+
+使用：
+
+查看文件内容用 -p
 
 ```shell
-echo "示例代码"
+$ git cat-file -p 7aca
+"Hello World!"
 ```
 
-### 得到结果
-
-最后，xxxxxx
+查看文件类型用 -t，使用 hash-object 存入的文件对象是 blob 类型的
 
 ```shell
-echo "示例代码"
+$ git cat-file -t 010b
+blob
 ```
+
+通过这两个命令就可以实现一个简单的版本控制了，比如我先改了，比如先写了一版 `论如何与产品相处.md` ，使用 `hash-object` 之后返回hash `x`，然后根据编辑意见做了一些改动，再使用 `hash-object` 保存变动后的文件，得到第二个版本的hash `x`，但是主编看了不满意，说要改回第一版，这时候使用 `cat-file` 将文件恢复即可。
+
+具体指令如下：
+
+```shell
+
+```
+
+
+
+
 
 ## 附录
 
 #### 讲述人
 
-XXX
+王杰
 
 #### 参考链接
 
 - [深入理解Git的实现原理](https://www.cnblogs.com/mamingqian/p/9711975.html)
-
 - [Git工作原理、基本操作](https://www.jianshu.com/p/f23f1af55708)
+- [Git详解之内部原理](https://www.cnblogs.com/guge-94/p/11288154.html)
