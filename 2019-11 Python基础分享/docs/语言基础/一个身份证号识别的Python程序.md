@@ -17,4 +17,10 @@ print(re.search(r'[\dxX]{18}', pytesseract.image_to_string(Image.open(sys.argv[1
 
 使用方法：`python3 ocr-idcard.py 图片路径.jpg`
 
-现目前要解读这个程序可能有点超前，但是弄懂基础知识之后，再来看这一段代码就更明白了
+### 如何理解？
+
+目前可以这样理解这个程序：`Python`可以看作是一个手机，`pytesseract`、`re`、`Image` 都可以看做是手机上装好的软件，识别并取出身份证信息可以分为如下三个步骤：
+
+- 用图片查看器(`Image`)  将图片打开
+- 让文字识别软件(`pytesseract`) 将图片上所有文字识别出来
+- 用检索工具(re) 将文字中符合身份证号规则的数据提取出来
