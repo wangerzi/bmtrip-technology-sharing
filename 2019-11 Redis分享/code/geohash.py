@@ -18,7 +18,16 @@ def base32Encode(byteStr):
         code += base32Str[int(byteStr[i*5:(i+1)*5], 2)]
     return code
 def base32Decode(code):
-    pass
+    base32Str = '0123456789bcdefghjkmnpqrstuvwxyz'
+    base32Map = {}
+    for i in range(0, len(base32Str)):
+        print('Current:', i, 'bin:', bin(i))
+        base32Map[base32Str[i]] = bin(i).strip('0b').zfill(5)
+    print(base32Map)
+    byteStr = ''
+    for i in code:
+        byteStr += base32Map[i]
+    return byteStr
 def splitByRange(originNumber, start, end, limit=11):
     """传入数字以及二分范围，返回二分区间编码二进制"""
     result = ''
@@ -43,22 +52,32 @@ def mergeLngLat(lngStr, latStr):
 def decode(geohash):
     """传入geohash，返回经纬度"""
     lngStr, latStr = splitGeoHash(geohash)
+    print(lngStr, latStr)
     lng = restoreByRange(lngStr, -180, 180)
     lat = restoreByRange(latStr, -90, 90)
     return lng, lat
 def splitGeoHash(geohash):
     """解码geohash，从32进制解码为二进制，奇数位拼接是经度，偶数位拼接是纬度"""
-    pass
+    byteStr = base32Decode(geohash)
+    print(byteStr)
+    lngStr = ''
+    latStr = ''
+    for i in range(0, len(byteStr)):
+        if i % 2:
+            lngStr += byteStr[i]
+        else:
+            latStr += byteStr[i]
+    return lngStr, latStr
 def restoreByRange(dstStr, start, end):
     """根据目标字符串和二分范围解码目标字符串"""
     limit = len(dstStr)
-    pass
+    return 1
 
 def main():
     geoHash = encode(116.3915044069,39.9011604105)
     # geoHash = encode(121.43960190000007,31.1932993)
     print(geoHash)
-    lng, lat = decode(wx4f1)
+    lng, lat = decode('wx4f1')
     print(lng, lat)
 
 main()
